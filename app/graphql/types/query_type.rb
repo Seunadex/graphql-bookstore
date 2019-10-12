@@ -9,7 +9,7 @@ module Types
     end
 
     def authors
-      Author.all
+      Author.all.order(:name)
     end
 
     field :author, AuthorType, null: true do
@@ -26,7 +26,7 @@ module Types
     end
 
     def books
-      Book.all
+      Book.all.order(:title)
     end
 
     field :book, BookType, null: true do

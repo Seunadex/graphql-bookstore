@@ -1,22 +1,20 @@
-import React, { Component } from 'react';
-import {
-  Form,
-  Input
-} from 'semantic-ui-react';
-import { Mutation } from 'react-apollo';
+import React, { Component } from "react";
+import { Form, Input, Button } from "semantic-ui-react";
+import { Mutation } from "react-apollo";
 
-import updateAuthor from '../mutations/updateAuthor';
+import updateAuthor from "../mutations/updateAuthor";
 
 class AuthorUpdateForm extends Component {
-  state = { name: '', age: '' }
+  state = { name: "", age: "" };
 
   componentDidMount() {
     this.setState({ ...this.props.author });
   }
 
-  handleChange = ({ target: { value, name } }) => this.setState({ [name]: value })
+  handleChange = ({ target: { value, name } }) =>
+    this.setState({ [name]: value });
 
-  handleSubmit = (updateAuthor) => {
+  handleSubmit = updateAuthor => {
     const { name, age, id } = this.state;
 
     updateAuthor({
@@ -24,50 +22,54 @@ class AuthorUpdateForm extends Component {
       optimisticResponse: {
         __typename: "Mutation",
         updateAuthor: {
-          __typename: 'Author',
+          __typename: "Author",
           author: {
-            __typename: 'Author',
+            __typename: "Author",
             id,
             name,
-            age,
+            age
           }
         }
       }
-    })
-    .then( () => {
+    }).then(() => {
       this.props.toggleEdit();
-    })
-  }
+    });
+  };
 
   render() {
     const { name, age } = this.state;
+    console.log(updateAuthor)
 
     return (
       <Mutation mutation={updateAuthor}>
         {(updateAuthor, { data }) => (
           <Form onSubmit={() => this.handleSubmit(updateAuthor)}>
             <Form.Field
-              label='Name'
-              placeholder='Name'
-              name='name'
+              label="Name"
+              placeholder="Name"
+              name="name"
               onChange={this.handleChange}
               value={name}
               control={Input}
             />
 
             <Form.Field
-              label='Age'
-              placeholder='Age'
-              name='age'
+              label="Age"
+              placeholder="Age"
+              name="age"
               onChange={this.handleChange}
               value={age}
               control={Input}
             />
-            <Form.Button>Submit</Form.Button>
+            <Button.Group>
+              <Form.Button positive>Submit</Form.Button>
+              <Button.Or />
+              <Button onClick={this.props.toggleEdit}>Cancel</Button>
+            </Button.Group>
           </Form>
         )}
       </Mutation>
-    )
+    );
   }
 }
 

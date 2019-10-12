@@ -16,7 +16,7 @@ class AuthorForm extends Component {
     const { name, age } = this.state;
 
     addAuthor({
-      variables: { name, age: parseInt(age) },
+      variables: { age: parseInt(age), name },
       refetchQueries: [{ query }]
     });
     this.setState({ name: '', age: '' });

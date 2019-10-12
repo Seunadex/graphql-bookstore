@@ -1,16 +1,22 @@
 import React, { Component } from "react";
 import { Query } from "react-apollo";
-import { Loader, Segment, Dimmer, Card, Container, Header } from "semantic-ui-react";
-import AuthorForm from './AuthorForm';
-import query from '../queries/getAuthors';
-import AuthorCard from './AuthorCard';
+import {
+  Loader,
+  Segment,
+  Dimmer,
+  Card,
+  Container,
+  Header,
+  Grid
+} from "semantic-ui-react";
+import AuthorForm from "./AuthorForm";
+import query from "../queries/getAuthors";
+import AuthorCard from "./AuthorCard";
 
 class Authors extends Component {
   render() {
     return (
-      <Query
-        query={query}
-      >
+      <Query query={query}>
         {({ loading, error, data }) => {
           if (loading)
             return (
@@ -23,13 +29,21 @@ class Authors extends Component {
           if (error) return <p>Error</p>;
           return (
             <Container>
-              <Header>Create Author</Header>
-              <AuthorForm/>
-              <Card.Group centered>
-                {data.authors.map(author => (
-                  <AuthorCard key={author.id} author={author}/>
-                ))}
-              </Card.Group>
+              <Grid divided="vertically">
+                <Grid.Row columns={2}>
+                  <Grid.Column width={3}>
+                    <Header>Create Author</Header>
+                    <AuthorForm />
+                  </Grid.Column>
+                  <Grid.Column width={9}>
+                    <Card.Group centered>
+                      {data.authors.map(author => (
+                        <AuthorCard key={author.id} author={author} />
+                      ))}
+                    </Card.Group>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
             </Container>
           );
         }}

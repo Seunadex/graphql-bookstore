@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button } from "semantic-ui-react";
+import { Card, Modal, Icon, Button, Popup } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import { Mutation } from "react-apollo";
 
@@ -7,6 +7,11 @@ import deleteAuthor from "../mutations/deleteAuthor";
 import query from "../queries/getAuthors";
 
 class AuthorCard extends Component {
+  state = { open: false };
+
+  show = () => () => this.setState({ open: true });
+  cancel = () => this.setState({ open: false });
+
   deleteAuthor = deleteAuthor => {
     deleteAuthor({
       variables: { id: this.props.author.id },
@@ -16,6 +21,7 @@ class AuthorCard extends Component {
 
   render() {
     const { name, id } = this.props.author;
+    const { open } = this.state;
     return (
       <Card>
         <Card.Content>
@@ -26,12 +32,28 @@ class AuthorCard extends Component {
         <Card.Content extra>
           <Mutation mutation={deleteAuthor}>
             {(deleteAuthor, { data }) => (
-              <Button
-                color="red"
-                onClick={() => this.deleteAuthor(deleteAuthor)}
-              >
-                Delete
-              </Button>
+              <div>
+                <Popup
+                  content="Delete this author"
+                  trigger={
+                    <Icon
+                      circular
+                      link
+                      name="delete"
+                      size="small"
+                      color="red"
+                      onClick={this.show()}
+                    />
+                  }
+                  position="right center"
+                />
+
+                <AuthorModal
+                  open={open}
+                  onDelete={() => this.deleteAuthor(deleteAuthor)}
+                  cancel={this.cancel}
+                />
+              </div>
             )}
           </Mutation>
         </Card.Content>
@@ -41,3 +63,26 @@ class AuthorCard extends Component {
 }
 
 export default AuthorCard;
+
+const AuthorModal = ({ open, cancel, onDelete }) => {
+  return (
+    <Modal size="mini" open={open} onClose={cancel}>
+      <Modal.Header>Delete Author</Modal.Header>
+      <Modal.Content>
+        <p>Are you sure you want to delete the author</p>
+      </Modal.Content>
+      <Modal.Actions>
+        <Button negative onClick={cancel}>
+          No
+        </Button>
+        <Button
+          positive
+          icon="checkmark"
+          labelPosition="right"
+          content="Yes"
+          onClick={onDelete}
+        />
+      </Modal.Actions>
+    </Modal>
+  );
+};

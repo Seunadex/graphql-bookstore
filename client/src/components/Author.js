@@ -12,11 +12,22 @@ import {
 
 import query from "../queries/getAuthor";
 import AuthorUpdateForm from "./AuthorUpdateForm";
+import CreateBookForm from "./CreateBookForm";
 
 class Author extends Component {
-  state = { edit: false };
+  state = {
+    edit: false,
+    createBook: false
+  };
 
-  toggleEdit = () => this.setState({ edit: !this.state.edit });
+  toggleEdit = () =>
+    this.setState({
+      edit: !this.state.edit
+    });
+  toggleCreate = () =>
+    this.setState({
+      createBook: !this.state.createBook
+    });
 
   render() {
     const { id } = this.props.match.params;
@@ -32,24 +43,35 @@ class Author extends Component {
               </Segment>
             );
 
-          if (error) return <p>{error}</p>;
+            if (error) return <p>{error}</p>;
 
-          const { name, age, books } = data.author;
+            const { name, age, books } = data.author;
+            const { edit, createBook } = this.state;
+
 
           return (
             <Container>
-              <Button onClick={this.props.history.goBack}>Back</Button>
-              {this.state.edit ? (
-                <AuthorUpdateForm
-                  toggleEdit={this.toggleEdit}
-                  author={data.author}
-                />
-              ) : (
+              {(!createBook && !edit) && (
                 <div>
                   <Header as="h1">{name}</Header>
                   <Header>Age: {age}</Header>
+                  <Button onClick={this.props.history.goBack}>Back</Button>
                   <Button onClick={this.toggleEdit}>Edit</Button>
+                  <Button onClick={this.toggleCreate}>Create Book</Button>
                 </div>
+                )}
+              {edit && (
+                <AuthorUpdateForm
+                toggleEdit={this.toggleEdit}
+                author={data.author}
+              />
+              )}
+
+              {createBook && (
+                <CreateBookForm
+                  authorId={data.author.id}
+                  toggleCreate={this.toggleCreate}
+                />
               )}
 
               <Card.Group centered>

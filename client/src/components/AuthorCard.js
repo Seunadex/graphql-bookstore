@@ -69,7 +69,7 @@ const AuthorModal = ({ open, cancel, onDelete }) => {
     <Modal size="mini" open={open} onClose={cancel}>
       <Modal.Header>Delete Author</Modal.Header>
       <Modal.Content>
-        <p>Are you sure you want to delete the author</p>
+        <p>Are you sure you want to delete the author?</p>
       </Modal.Content>
       <Modal.Actions>
         <Button negative onClick={cancel}>

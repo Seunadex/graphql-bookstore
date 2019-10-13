@@ -14,9 +14,9 @@ import {
 } from "semantic-ui-react";
 
 import query from "../queries/getAuthor";
-import AuthorUpdateForm from "./AuthorUpdateForm";
-import CreateBookForm from "./CreateBookForm";
-import BookUpdateForm from "./BookUpdateForm";
+import AuthorUpdateForm from "./AuthorUpdate";
+import CreateBook from "./CreateBook";
+import BookUpdate from "./BookUpdate";
 import { Mutation } from "react-apollo";
 import deleteBook from "../mutations/deleteBook";
 
@@ -104,7 +104,7 @@ class Author extends Component {
               )}
 
               {createBook && (
-                <CreateBookForm
+                <CreateBook
                   authorId={data.author.id}
                   toggleCreate={this.toggleCreate}
                 />
@@ -154,7 +154,7 @@ class Author extends Component {
                       isUpdateModalOpen={isUpdateModalOpen[book.id]}
                       closeBookUpdateModal={() => this.closeBookUpdateModal(book.id)}
                     >
-                      <BookUpdateForm
+                      <BookUpdate
                         closeBookUpdateModal={() => this.closeBookUpdateModal(book.id)}
                         book={book}
                       />

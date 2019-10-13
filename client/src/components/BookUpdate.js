@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Form, Input, Button } from "semantic-ui-react";
 import { Mutation } from "react-apollo";
 
 import updateBook from "../mutations/updateBook";
+import BookForm from "./BookForm";
 
-class BookUpdateForm extends Component {
+class BookUpdate extends Component {
   state = { title: "", genre: "" };
 
   componentDidMount() {
@@ -27,7 +27,7 @@ class BookUpdateForm extends Component {
             __typename: "Book",
             id,
             title,
-            genre,
+            genre
           }
         }
       }
@@ -42,34 +42,17 @@ class BookUpdateForm extends Component {
     return (
       <Mutation mutation={updateBook}>
         {(updateBook, { data }) => (
-          <Form onSubmit={() => this.handleSubmit(updateBook)}>
-            <Form.Field
-              label="Title"
-              placeholder="Title"
-              name="title"
-              onChange={this.handleChange}
-              value={title}
-              control={Input}
-            />
-
-            <Form.Field
-              label="Genre"
-              placeholder="Genre"
-              name="genre"
-              onChange={this.handleChange}
-              value={genre}
-              control={Input}
-            />
-            <Button.Group>
-              <Form.Button positive>Submit</Form.Button>
-              <Button.Or />
-              <Button onClick={this.props.closeBookUpdateModal}>Cancel</Button>
-            </Button.Group>
-          </Form>
+          <BookForm
+            onSubmit={() => this.handleSubmit(updateBook)}
+            handleChange={this.handleChange}
+            title={title}
+            genre={genre}
+            onClose={this.closeBookUpdateModal}
+          />
         )}
       </Mutation>
     );
   }
 }
 
-export default BookUpdateForm;
+export default BookUpdate;

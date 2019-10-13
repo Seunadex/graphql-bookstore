@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { Form, Input, Button } from "semantic-ui-react";
 import { Mutation } from "react-apollo";
 
 import updateAuthor from "../mutations/updateAuthor";
+import AuthorForm from "./AuthorForm";
 
-class AuthorUpdateForm extends Component {
+class AuthorUpdate extends Component {
   state = { name: "", age: "" };
 
   componentDidMount() {
@@ -42,34 +42,18 @@ class AuthorUpdateForm extends Component {
     return (
       <Mutation mutation={updateAuthor}>
         {(updateAuthor, { data }) => (
-          <Form onSubmit={() => this.handleSubmit(updateAuthor)}>
-            <Form.Field
-              label="Name"
-              placeholder="Name"
-              name="name"
-              onChange={this.handleChange}
-              value={name}
-              control={Input}
-            />
-
-            <Form.Field
-              label="Age"
-              placeholder="Age"
-              name="age"
-              onChange={this.handleChange}
-              value={age}
-              control={Input}
-            />
-            <Button.Group>
-              <Form.Button positive>Submit</Form.Button>
-              <Button.Or />
-              <Button onClick={this.props.toggleEdit}>Cancel</Button>
-            </Button.Group>
-          </Form>
+          <AuthorForm
+            onSubmit={() => this.handleSubmit(updateAuthor)}
+            handleChange={this.handleChange}
+            name={name}
+            age={age}
+            onCancel={this.props.toggleEdit}
+            edit={true}
+          />
         )}
       </Mutation>
     );
   }
 }
 
-export default AuthorUpdateForm;
+export default AuthorUpdate;

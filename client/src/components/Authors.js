@@ -9,7 +9,7 @@ import {
   Header,
   Grid
 } from "semantic-ui-react";
-import AuthorForm from "./AuthorForm";
+import AddAuthor from "./AddAuthor";
 import query from "../queries/getAuthors";
 import AuthorCard from "./AuthorCard";
 
@@ -33,7 +33,7 @@ class Authors extends Component {
                 <Grid.Row columns={2}>
                   <Grid.Column width={3}>
                     <Header>Create Author</Header>
-                    <AuthorForm />
+                    <AddAuthor />
                   </Grid.Column>
                   <Grid.Column width={9}>
                     <Card.Group centered>

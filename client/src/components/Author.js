@@ -9,12 +9,14 @@ import {
   Card,
   Button,
   Icon,
-  Confirm
+  Confirm,
+  Modal
 } from "semantic-ui-react";
 
 import query from "../queries/getAuthor";
 import AuthorUpdateForm from "./AuthorUpdateForm";
 import CreateBookForm from "./CreateBookForm";
+import BookUpdateForm from "./BookUpdateForm";
 import { Mutation } from "react-apollo";
 import deleteBook from "../mutations/deleteBook";
 
@@ -23,8 +25,12 @@ class Author extends Component {
     edit: false,
     createBook: false,
     deletingBook: false,
-    bookId: ""
+    bookId: "",
+    isUpdateModalOpen: false
   };
+
+  showBookUpdateModal = (id) => this.setState({ isUpdateModalOpen: { [id]: true } });
+  closeBookUpdateModal = (id) => this.setState({ isUpdateModalOpen: { [id]: false }});
 
   toggleEdit = () =>
     this.setState({
@@ -36,13 +42,13 @@ class Author extends Component {
     });
   confirm = id =>
     this.setState({
-      deletingBook: true,
+      deletingBook: { [id]: true },
       bookId: id
     });
 
-  cancelDelete = () =>
+  cancelDelete = id =>
     this.setState({
-      deletingBook: false,
+      deletingBook: { [id]: false },
       bookId: ""
     });
 
@@ -72,7 +78,12 @@ class Author extends Component {
           if (error) return <p>{error}</p>;
 
           const { name, age, books } = data.author;
-          const { edit, createBook, deletingBook } = this.state;
+          const {
+            edit,
+            createBook,
+            deletingBook,
+            isUpdateModalOpen
+          } = this.state;
 
           return (
             <Container>
@@ -100,10 +111,10 @@ class Author extends Component {
               )}
 
               <Card.Group centered>
-                {books.map(({ id, title, genre }) => (
-                  <Card key={id}>
+                {books.map(book => (
+                  <Card key={book.id}>
                     <Card.Content>
-                      <Card.Header>{title}</Card.Header>
+                      <Card.Header>{book.title}</Card.Header>
                       <Mutation mutation={deleteBook}>
                         {(deleteBook, { data }) => (
                           <div>
@@ -114,22 +125,40 @@ class Author extends Component {
                               name="delete"
                               size="small"
                               color="red"
-                              onClick={() => this.confirm(id)}
+                              onClick={() => this.confirm(book.id)}
                             />
                             <Confirm
-                              open={deletingBook}
-                              onCancel={this.cancelDelete}
+                              open={deletingBook[book.id]}
+                              onCancel={() => this.cancelDelete(book.id)}
                               onConfirm={() => this.deleteBook(deleteBook)}
-                              size='mini'
-                              content='Are you sure you want to delete this book?'
+                              size="mini"
+                              content="Are you sure you want to delete this book?"
                             />
                           </div>
                         )}
                       </Mutation>
+                      <Icon
+                        floated="right"
+                        circular
+                        link
+                        name="edit"
+                        size="small"
+                        color="blue"
+                        onClick={() => this.showBookUpdateModal(book.id)}
+                      />
                     </Card.Content>
                     <Card.Content extra>
-                      <Card.Description>{genre}</Card.Description>
+                      <Card.Description>{book.genre}</Card.Description>
                     </Card.Content>
+                    <UpdateBookModal
+                      isUpdateModalOpen={isUpdateModalOpen[book.id]}
+                      closeBookUpdateModal={() => this.closeBookUpdateModal(book.id)}
+                    >
+                      <BookUpdateForm
+                        closeBookUpdateModal={() => this.closeBookUpdateModal(book.id)}
+                        book={book}
+                      />
+                    </UpdateBookModal>
                   </Card>
                 ))}
               </Card.Group>
@@ -142,3 +171,20 @@ class Author extends Component {
 }
 
 export default Author;
+
+const UpdateBookModal = ({
+  isUpdateModalOpen,
+  closeBookUpdateModal,
+  children
+}) => (
+  <Modal
+    dimmer="blurring"
+    open={isUpdateModalOpen}
+    onClose={closeBookUpdateModal}
+  >
+    <Modal.Header>Update book</Modal.Header>
+    <Modal.Content>
+      <Modal.Description>{children}</Modal.Description>
+    </Modal.Content>
+  </Modal>
+);

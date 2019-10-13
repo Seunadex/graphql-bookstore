@@ -38,7 +38,6 @@ class AuthorUpdateForm extends Component {
 
   render() {
     const { name, age } = this.state;
-    console.log(updateAuthor)
 
     return (
       <Mutation mutation={updateAuthor}>

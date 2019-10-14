@@ -9,7 +9,7 @@ export default function BookForm({
   onClose
 }) {
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} className="shift-left">
       <Form.Field
         label="Title"
         placeholder="Title"

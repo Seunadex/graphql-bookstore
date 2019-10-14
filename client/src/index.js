@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 import gql from "graphql-tag";
-import "./index.css";
+import "./index.scss";
 import App from "./App";
 import "semantic-ui-css/semantic.min.css";
 import * as serviceWorker from "./serviceWorker";

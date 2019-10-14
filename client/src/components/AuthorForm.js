@@ -10,7 +10,7 @@ export default function AuthorForm({
   edit
 }) {
   return (
-    <Form onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit} className="shift-left">
       <Form.Field
         label="Name"
         placeholder="Name"

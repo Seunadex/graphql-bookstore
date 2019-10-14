@@ -29,8 +29,10 @@ class Author extends Component {
     isUpdateModalOpen: false
   };
 
-  showBookUpdateModal = (id) => this.setState({ isUpdateModalOpen: { [id]: true } });
-  closeBookUpdateModal = (id) => this.setState({ isUpdateModalOpen: { [id]: false }});
+  showBookUpdateModal = id =>
+    this.setState({ isUpdateModalOpen: { [id]: true } });
+  closeBookUpdateModal = id =>
+    this.setState({ isUpdateModalOpen: { [id]: false } });
 
   toggleEdit = () =>
     this.setState({
@@ -86,14 +88,16 @@ class Author extends Component {
           } = this.state;
 
           return (
-            <Container>
+            <Container className="author">
               {!createBook && !edit && (
-                <div>
+                <div className="author-info">
                   <Header as="h1">{name}</Header>
                   <Header>Age: {age}</Header>
-                  <Button onClick={this.props.history.goBack}>Back</Button>
-                  <Button onClick={this.toggleEdit}>Edit</Button>
-                  <Button onClick={this.toggleCreate}>Create Book</Button>
+                  <div className="author-actions">
+                    <Button onClick={this.toggleEdit}>Edit Author</Button>
+                    <Button onClick={this.toggleCreate}>Create Book</Button>
+                    <Button onClick={this.props.history.goBack}>Back</Button>
+                  </div>
                 </div>
               )}
               {edit && (
@@ -110,52 +114,56 @@ class Author extends Component {
                 />
               )}
 
-              <Card.Group centered>
+              <Card.Group>
                 {books.map(book => (
                   <Card key={book.id}>
-                    <Card.Content>
+                    <Card.Content className="author-card">
                       <Card.Header>{book.title}</Card.Header>
-                      <Mutation mutation={deleteBook}>
-                        {(deleteBook, { data }) => (
-                          <div>
-                            <Icon
-                              floated="right"
-                              circular
-                              link
-                              name="delete"
-                              size="small"
-                              color="red"
-                              onClick={() => this.confirm(book.id)}
-                            />
-                            <Confirm
-                              open={deletingBook[book.id]}
-                              onCancel={() => this.cancelDelete(book.id)}
-                              onConfirm={() => this.deleteBook(deleteBook)}
-                              size="mini"
-                              content="Are you sure you want to delete this book?"
-                            />
-                          </div>
-                        )}
-                      </Mutation>
-                      <Icon
-                        floated="right"
-                        circular
-                        link
-                        name="edit"
-                        size="small"
-                        color="blue"
-                        onClick={() => this.showBookUpdateModal(book.id)}
-                      />
+                      <div className="card-btns">
+                        <Mutation mutation={deleteBook}>
+                          {(deleteBook, { data }) => (
+                            <div>
+                              <Icon
+                                circular
+                                link
+                                name="delete"
+                                size="small"
+                                color="red"
+                                onClick={() => this.confirm(book.id)}
+                              />
+                              <Confirm
+                                open={deletingBook[book.id]}
+                                onCancel={() => this.cancelDelete(book.id)}
+                                onConfirm={() => this.deleteBook(deleteBook)}
+                                size="mini"
+                                content="Are you sure you want to delete this book?"
+                              />
+                            </div>
+                          )}
+                        </Mutation>
+                        <Icon
+                          circular
+                          link
+                          name="edit"
+                          size="small"
+                          color="blue"
+                          onClick={() => this.showBookUpdateModal(book.id)}
+                        />
+                      </div>
                     </Card.Content>
                     <Card.Content extra>
                       <Card.Description>{book.genre}</Card.Description>
                     </Card.Content>
                     <UpdateBookModal
                       isUpdateModalOpen={isUpdateModalOpen[book.id]}
-                      closeBookUpdateModal={() => this.closeBookUpdateModal(book.id)}
+                      closeBookUpdateModal={() =>
+                        this.closeBookUpdateModal(book.id)
+                      }
                     >
                       <BookUpdate
-                        closeBookUpdateModal={() => this.closeBookUpdateModal(book.id)}
+                        closeBookUpdateModal={() =>
+                          this.closeBookUpdateModal(book.id)
+                        }
                         book={book}
                       />
                     </UpdateBookModal>
@@ -179,6 +187,7 @@ const UpdateBookModal = ({
 }) => (
   <Modal
     dimmer="blurring"
+    size="mini"
     open={isUpdateModalOpen}
     onClose={closeBookUpdateModal}
   >

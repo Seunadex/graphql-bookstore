@@ -6,8 +6,7 @@ import {
   Dimmer,
   Card,
   Container,
-  Header,
-  Grid
+  Header
 } from "semantic-ui-react";
 import AddAuthor from "./AddAuthor";
 import query from "../queries/getAuthors";
@@ -28,22 +27,20 @@ class Authors extends Component {
             );
           if (error) return <p>Error</p>;
           return (
-            <Container>
-              <Grid divided="vertically">
-                <Grid.Row columns={2}>
-                  <Grid.Column width={3}>
-                    <Header>Create Author</Header>
-                    <AddAuthor />
-                  </Grid.Column>
-                  <Grid.Column width={9}>
-                    <Card.Group centered>
-                      {data.authors.map(author => (
-                        <AuthorCard key={author.id} author={author} />
-                      ))}
-                    </Card.Group>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
+            <Container className="authors">
+              <div className="authors-container">
+                <div className="container-form">
+                  <Header>Create Author</Header>
+                  <AddAuthor />
+                </div>
+                <div className="container-list">
+                  <Card.Group>
+                    {data.authors.map(author => (
+                      <AuthorCard key={author.id} author={author} />
+                    ))}
+                  </Card.Group>
+                </div>
+              </div>
             </Container>
           );
         }}
